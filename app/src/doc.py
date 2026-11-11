@@ -1,0 +1,21 @@
+# TAMANHO DA MALHA:
+# EX: X = 5
+#     Y = 5
+
+# POSIÇÃO INICIAL DA PROBE: 
+# X = 0 
+# Y = 0 
+
+#DIRECTION = "NORTH" | "EAST" | "SOUTH" | "WEST"
+
+# COMANDOS:
+# M = MOVE
+# R = TURN RIGHT
+# L = TURN LEFT
+
+# EX: MMMRMMRMRRM
+
+# RESULTADO:
+# X = 2
+# Y = 3
+# DIRECTION = "EAST"
