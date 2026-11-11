@@ -1,0 +1,8 @@
+[project]
+name = "mars-probe-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.162.4",
+    "uvicorn>=0.54.0",
+]
