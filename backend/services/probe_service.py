@@ -80,4 +80,6 @@ class ProbeService:
             x=probe.position_x,
             y=probe.position_y,
             direction=probe.direction,
+            grid_max_x=probe.grid_max_x,
+            grid_max_y=probe.grid_max_y,
         )

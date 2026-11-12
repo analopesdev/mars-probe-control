@@ -58,6 +58,9 @@ class ProbeResponse(BaseModel):
     x: int
     y: int
     direction: Direction
+    # Tamanho da malha: o front precisa dele para desenhar o planalto.
+    grid_max_x: int
+    grid_max_y: int
 
 
 class ProbeListResponse(BaseModel):
