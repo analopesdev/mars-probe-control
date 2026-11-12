@@ -13,7 +13,7 @@ from exceptions import (
     ProbeNotFoundError,
 )
 from database import init_db
-from routes.probe_routes import router
+from controllers.probe_controller import router
 
 
 @asynccontextmanager

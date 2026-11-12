@@ -2,7 +2,7 @@ import os
 import sqlite3
 from contextlib import closing
 
-DATABASE_PATH = os.getenv("DATABASE_PATH", "probe.db")
+DATABASE_PATH = os.getenv("DATABASE_PATH", os.path.join(os.path.dirname(__file__), "probe.db"))
 
 CREATE_PROBES_TABLE = """
 CREATE TABLE IF NOT EXISTS probes (
