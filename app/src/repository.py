@@ -3,10 +3,8 @@ import sqlite3
 from src.database import DATABASE_PATH
 from src.schema import CreateProbe, Probe, UpdateProbe
 
-
 class ProbeRepository:
     def __init__(self, database_path: str = DATABASE_PATH):
-        # A tabela é criada por init_db(), chamado no lifespan da aplicação.
         self.conn = sqlite3.connect(database_path, check_same_thread=False)
         self.conn.row_factory = sqlite3.Row
 

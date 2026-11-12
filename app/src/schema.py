@@ -35,12 +35,10 @@ class CreateProbe(BaseModel):
     grid_max_y: int
     direction: Direction
 
-
 class UpdateProbe(BaseModel):
     position_x: int
     position_y: int
     direction: Direction
-
 
 class MoveProbeRequest(BaseModel):
     commands: str
@@ -51,7 +49,6 @@ class ProbeResponse(BaseModel):
     x: int
     y: int
     direction: Direction
-
 
 class ProbeListResponse(BaseModel):
     probes: list[ProbeResponse]
