@@ -1,0 +1,23 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Banco local
+*.db
+
+# Ambiente
+.env
+.env.*
+
+# Node / Vite
+node_modules/
+dist/
+
+# Sistema
+.DS_Store

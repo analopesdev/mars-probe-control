@@ -1,7 +1,8 @@
+import os
 import sqlite3
 from contextlib import closing
 
-DATABASE_PATH = "probe.db"
+DATABASE_PATH = os.getenv("DATABASE_PATH", "probe.db")
 
 CREATE_PROBES_TABLE = """
 CREATE TABLE IF NOT EXISTS probes (
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS probes (
     CHECK (position_y <= grid_max_y)
 )
 """
+
 
 def init_db(database_path: str = DATABASE_PATH) -> None:
     with closing(sqlite3.connect(database_path)) as connection:

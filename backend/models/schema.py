@@ -35,10 +35,12 @@ class CreateProbe(BaseModel):
     grid_max_y: int
     direction: Direction
 
+
 class UpdateProbe(BaseModel):
     position_x: int
     position_y: int
     direction: Direction
+
 
 class LaunchProbeRequest(BaseModel):
     # x e y são o tamanho da malha (limite máximo), não a posição da sonda.
@@ -56,6 +58,7 @@ class ProbeResponse(BaseModel):
     x: int
     y: int
     direction: Direction
+
 
 class ProbeListResponse(BaseModel):
     probes: list[ProbeResponse]

@@ -1,6 +1,7 @@
 class ProbeError(Exception):
     """Base class for all probe errors."""
 
+
 class ProbeNotFoundError(ProbeError):
     def __init__(self, probe_id: str):
         super().__init__(f"Probe with id {probe_id} not found")

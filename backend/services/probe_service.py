@@ -1,13 +1,13 @@
 import uuid
 
-from src.exceptions import (
+from exceptions import (
     InvalidCommandError,
     InvalidGridError,
     OutOfGridError,
     ProbeNotFoundError,
 )
-from src.repository import ProbeRepository
-from src.schema import CreateProbe, Direction, Probe, ProbeResponse, UpdateProbe
+from models.schema import CreateProbe, Direction, Probe, ProbeResponse, UpdateProbe
+from repositories.probe_repository import ProbeRepository
 
 DIRECTION_TO_MOVE = {
     Direction.NORTH: (0, 1),
@@ -17,6 +17,7 @@ DIRECTION_TO_MOVE = {
 }
 
 VALID_COMMANDS = {"M", "L", "R"}
+
 
 class ProbeService:
     def __init__(self, probe_repository: ProbeRepository):

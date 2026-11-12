@@ -1,7 +1,8 @@
 import sqlite3
 
-from src.database import DATABASE_PATH
-from src.schema import CreateProbe, Probe, UpdateProbe
+from models.schema import CreateProbe, Probe, UpdateProbe
+from database import DATABASE_PATH
+
 
 class ProbeRepository:
     def __init__(self, database_path: str = DATABASE_PATH):
