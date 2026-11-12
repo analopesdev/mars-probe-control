@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from src.database import init_db
@@ -11,7 +12,7 @@ from src.exceptions import (
     ProbeNotFoundError,
 )
 from src.repository import ProbeRepository
-from src.schema import Direction, MoveProbeRequest, ProbeListResponse, ProbeResponse
+from src.schema import LaunchProbeRequest, MoveProbeRequest, ProbeListResponse, ProbeResponse
 from src.service import ProbeService
 
 
@@ -22,6 +23,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Probe API", description="API for the probe", lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 probe_service = ProbeService(ProbeRepository())
 
 
@@ -37,10 +44,10 @@ app.add_exception_handler(OutOfGridError, _error_handler(422))
 app.add_exception_handler(InvalidGridError, _error_handler(422))
 
 @app.post("/probes", response_model=ProbeResponse)
-def launch_probe(grid_max_x: int, grid_max_y: int, direction: Direction):
-    return probe_service.launch_probe(grid_max_x, grid_max_y, direction)
+def launch_probe(body: LaunchProbeRequest):
+    return probe_service.launch_probe(body.x, body.y, body.direction)
 
-@app.put("/probes/{id}/move", response_model=ProbeResponse)
+@app.post("/probes/{id}/commands", response_model=ProbeResponse)
 def move_probe(id: str, body: MoveProbeRequest):
     return probe_service.move_probe(id, body.commands)
 

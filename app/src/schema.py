@@ -40,6 +40,13 @@ class UpdateProbe(BaseModel):
     position_y: int
     direction: Direction
 
+class LaunchProbeRequest(BaseModel):
+    # x e y são o tamanho da malha (limite máximo), não a posição da sonda.
+    x: int
+    y: int
+    direction: Direction
+
+
 class MoveProbeRequest(BaseModel):
     commands: str
 

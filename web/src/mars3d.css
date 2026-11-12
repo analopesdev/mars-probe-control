@@ -1,0 +1,510 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --paper: #e8e1d5;
+  --panel: #f2ede4;
+  --ink: #1d1a17;
+  --muted: #6b6157;
+  --line: #1d1a17;
+  --hairline: #c9bfb0;
+  --rust: #b5431f;
+  --ok: #2f6b3a;
+  --error: #a3271b;
+  --soil-dark: #a64a27;
+  --soil-light: #b85a32;
+
+  --condensed: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "Barlow", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+}
+
+h1,
+h2 {
+  font-family: var(--condensed);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+h1 {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+h2 {
+  font-size: 15px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 10px;
+}
+
+h2 .index {
+  color: var(--rust);
+  font-family: var(--mono);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* ---------- Estrutura ---------- */
+
+.page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 3px solid var(--line);
+}
+
+.header .muted {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.sidebar {
+  flex: 1 1 300px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.content {
+  flex: 999 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.row--wrap>.card {
+  flex: 1 1 320px;
+}
+
+.card--dark {
+  background: var(--panel);
+}
+
+.card--scene {
+  padding: 0;
+  overflow: hidden;
+  background: #d9cfbf;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.row--end {
+  align-items: flex-end;
+}
+
+.row--wrap {
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.grow {
+  flex: 1 1 200px;
+}
+
+/* ---------- Formulários ---------- */
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  font-family: var(--condensed);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+input {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  background: #fbf8f3;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 15px;
+}
+
+input:focus {
+  outline: 2px solid var(--rust);
+  outline-offset: -2px;
+}
+
+.sequence {
+  font-size: 17px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 2px;
+}
+
+.primary {
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--condensed);
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--rust);
+  border-color: var(--rust);
+}
+
+.key {
+  width: 48px;
+  height: 44px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 16px;
+}
+
+.key:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.directions {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.directions legend {
+  font-family: var(--condensed);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.chip {
+  height: 40px;
+  margin-left: -1px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.chip:first-of-type {
+  margin-left: 0;
+}
+
+.chip--active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------- Frota ---------- */
+
+.probe-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 4px;
+  margin-top: -1px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--ink);
+}
+
+.probe-row:hover {
+  background: #e9e2d7;
+}
+
+.probe-row--selected {
+  box-shadow: inset 3px 0 0 var(--rust);
+  padding-left: 12px;
+  background: #e9e2d7;
+}
+
+/* ---------- Telemetria ---------- */
+
+.telemetry {
+  display: flex;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.telemetry div {
+  padding: 6px 16px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line);
+}
+
+.telemetry div:first-child {
+  border-left: none;
+}
+
+.telemetry span {
+  font-family: var(--condensed);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.telemetry strong {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+/* ---------- Textos e registro ---------- */
+
+.mono {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.muted {
+  color: var(--muted);
+  margin: 0;
+}
+
+.small {
+  font-size: 12px;
+}
+
+.accent {
+  color: var(--rust);
+}
+
+.empty {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.log li {
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--hairline);
+}
+
+.log li::before {
+  display: inline-block;
+  width: 46px;
+  font-weight: 500;
+}
+
+.log--ok {
+  color: var(--ink);
+}
+
+.log--ok::before {
+  content: "[OK]";
+  color: var(--ok);
+}
+
+.log--error {
+  color: var(--error);
+}
+
+.log--error::before {
+  content: "[ERR]";
+}
+
+/* ---------- Cena 3D ---------- */
+
+.scene {
+  height: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+  overflow: hidden;
+  background-image:
+    linear-gradient(var(--hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.board {
+  position: relative;
+  background: #7f3418;
+  transform-style: preserve-3d;
+}
+
+/* Laterais do planalto, para dar espessura à "maquete". */
+.board-side {
+  position: absolute;
+}
+
+.board-side--left {
+  left: -28px;
+  top: 0;
+  width: 28px;
+  transform-origin: right center;
+  transform: rotateY(-90deg);
+  background: #43190a;
+}
+
+.board-side--front {
+  left: 0;
+  height: 28px;
+  transform-origin: top center;
+  transform: rotateX(-90deg);
+  background: #56220e;
+}
+
+.compass {
+  position: absolute;
+  top: -28px;
+  font-family: var(--condensed);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.axis-label {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #f3d9c6;
+}
+
+.cells {
+  position: absolute;
+  display: grid;
+}
+
+.cell {
+  border-radius: 2px;
+}
+
+.cell--dark {
+  background: var(--soil-dark);
+}
+
+.cell--light {
+  background: var(--soil-light);
+}
+
+.cell--current {
+  box-shadow: inset 0 0 0 2px #f2ede4;
+}
+
+.rover,
+.rover-shadow {
+  position: absolute;
+  transition: left 0.45s ease, top 0.45s ease, transform 0.45s ease;
+}
+
+.rover {
+  width: 40px;
+  height: 48px;
+  transform-style: preserve-3d;
+  transform-origin: center;
+}
+
+.rover-shadow {
+  border-radius: 50%;
+  background: rgba(40, 12, 4, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .rover,
+  .rover-shadow {
+    transition: none;
+  }
+}
