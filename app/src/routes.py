@@ -31,22 +31,18 @@ def _error_handler(status_code: int):
 
     return handler
 
-
 app.add_exception_handler(ProbeNotFoundError, _error_handler(404))
 app.add_exception_handler(InvalidCommandError, _error_handler(422))
 app.add_exception_handler(OutOfGridError, _error_handler(422))
 app.add_exception_handler(InvalidGridError, _error_handler(422))
 
-
 @app.post("/probes", response_model=ProbeResponse)
 def launch_probe(grid_max_x: int, grid_max_y: int, direction: Direction):
     return probe_service.launch_probe(grid_max_x, grid_max_y, direction)
 
-
 @app.put("/probes/{id}/move", response_model=ProbeResponse)
 def move_probe(id: str, body: MoveProbeRequest):
     return probe_service.move_probe(id, body.commands)
-
 
 @app.get("/probes", response_model=ProbeListResponse)
 def list_probes():
