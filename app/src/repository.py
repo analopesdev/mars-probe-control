@@ -14,8 +14,15 @@ class ProbeRepository:
         with self.conn:
             self.conn.execute(
                 "INSERT INTO probes (id, position_x, position_y, direction, grid_max_x, grid_max_y) "
-                "VALUES (?, 0, 0, ?, ?, ?)",
-                (new_probe.id, new_probe.direction, new_probe.grid_max_x, new_probe.grid_max_y),
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (
+                    new_probe.id,
+                    new_probe.position_x,
+                    new_probe.position_y,
+                    new_probe.direction.value,
+                    new_probe.grid_max_x,
+                    new_probe.grid_max_y,
+                ),
             )
         return self.get_probe(new_probe.id)
 
@@ -23,7 +30,12 @@ class ProbeRepository:
         with self.conn:
             self.conn.execute(
                 "UPDATE probes SET position_x = ?, position_y = ?, direction = ? WHERE id = ?",
-                (update_probe.position_x, update_probe.position_y, update_probe.direction, id),
+                (
+                    update_probe.position_x,
+                    update_probe.position_y,
+                    update_probe.direction.value,
+                    id,
+                ),
             )
         return self.get_probe(id)
 

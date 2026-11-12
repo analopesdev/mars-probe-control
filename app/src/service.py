@@ -1,88 +1,82 @@
 import uuid
 
+from src.exceptions import (
+    InvalidCommandError,
+    InvalidGridError,
+    OutOfGridError,
+    ProbeNotFoundError,
+)
 from src.repository import ProbeRepository
-from src.schema import CreateProbe, CreateProbResponse, MoveProbeResponse
-from src.schema import Direction
+from src.schema import CreateProbe, Direction, Probe, ProbeResponse, UpdateProbe
 
-direction_to_move = {
-    "SOUTH": (-1, 0),
-    "EAST": (0, 1),
-    "NORTH": (1, 0),
-    "WEST": (0, -1)
+DIRECTION_TO_MOVE = {
+    Direction.NORTH: (0, 1),
+    Direction.SOUTH: (0, -1),
+    Direction.EAST: (1, 0),
+    Direction.WEST: (-1, 0),
 }
 
+VALID_COMMANDS = {"M", "L", "R"}
+
 class ProbeService:
-    def __init__(self):
-        self.probe_repository = ProbeRepository()
+    def __init__(self, probe_repository: ProbeRepository):
+        self.probe_repository = probe_repository
 
-    def launch_probe(self, grid_max_x: int, grid_max_y: int, direction_grid: str):
-        direction = Direction(direction_grid)
-
+    def launch_probe(self, grid_max_x: int, grid_max_y: int, direction: str) -> ProbeResponse:
         if grid_max_x <= 0 or grid_max_y <= 0:
-            raise ValueError("Grid size must be greater than 0")
-
-        if direction not in Direction.values():
-            raise ValueError("Invalid direction")
+            raise InvalidGridError()
 
         new_probe = CreateProbe(
-                        id=str(uuid.uuid4()), 
-                        position_x=0, 
-                        position_y=0, 
-                        grid_max_x=grid_max_x, 
-                        grid_max_y=grid_max_y, 
-                        direction=direction_grid
-                    )
+            id=str(uuid.uuid4()),
+            position_x=0,
+            position_y=0,
+            grid_max_x=grid_max_x,
+            grid_max_y=grid_max_y,
+            direction=Direction(direction),
+        )
+        return self._to_response(self.probe_repository.insert_probe(new_probe))
 
-        probe_created = self.probe_repository.insert_probe(new_probe)
+    def move_probe(self, probe_id: str, commands: str) -> ProbeResponse:
+        self._validate_commands(commands)
 
-        create_probe_response = CreateProbResponse(id=probe_created.id, probe_pos_x=0, probe_pos_y=0, probe_direction=direction_grid)
-
-        return create_probe_response.model_dump()
-
-    def move_probe(self, probe_id: str, commands: list[str]):
         probe = self.probe_repository.get_probe(probe_id)
-
         if probe is None:
-            raise ValueError(f"Probe with id {probe_id} not found")
+            raise ProbeNotFoundError(probe_id)
 
-        grid_max_x = probe.grid_max_x
-        grid_max_y = probe.grid_max_y
-        direction = Direction(probe.direction)
-
-        x = probe.position_x
-        y = probe.position_y
-
-        self.validate_command(commands)
+        direction = probe.direction
+        x, y = probe.position_x, probe.position_y
 
         for command in commands:
-            match command:
-                case "M":
-                    forward_x, forward_y = direction_to_move[direction]
+            if command == "M":
+                dx, dy = DIRECTION_TO_MOVE[direction]
+                next_x, next_y = x + dx, y + dy
+                if not (0 <= next_x <= probe.grid_max_x and 0 <= next_y <= probe.grid_max_y):
+                    raise OutOfGridError()
+                x, y = next_x, next_y
+            elif command == "L":
+                direction = direction.left()
+            elif command == "R":
+                direction = direction.right()
 
-                    x = x + forward_x
-                    y = y + forward_y
+        updated = self.probe_repository.update_probe(
+            probe_id, UpdateProbe(position_x=x, position_y=y, direction=direction)
+        )
+        return self._to_response(updated)
 
-                    if grid_max_x < x or x < 0 or grid_max_y < y or y < 0:
-                        raise ValueError("Probe cannot move out of the grid")
+    def list_probes(self) -> list[ProbeResponse]:
+        return [self._to_response(probe) for probe in self.probe_repository.list_probes()]
 
-                case "R":
-                    direction = direction.right()
-
-                case "L":
-                    direction = direction.left()
-        
-        probe.position_x = x
-        probe.position_y = y
-        probe.direction = direction
-        
-        self.probe_repository.update_probe(probe_id, probe)
-
-        return MoveProbeResponse(x=x, y=y, direction=direction)
-
-    def list_probes(self):
-        return self.probe_repository.get_all_probes()
-
-    def validate_command(self, commands: list[str]):
+    @staticmethod
+    def _validate_commands(commands: str) -> None:
         for command in commands:
-            if command not in ["M", "L", "R"]:
-                raise ValueError(f"Invalid command: {command}")
+            if command not in VALID_COMMANDS:
+                raise InvalidCommandError(command)
+
+    @staticmethod
+    def _to_response(probe: Probe) -> ProbeResponse:
+        return ProbeResponse(
+            id=probe.id,
+            x=probe.position_x,
+            y=probe.position_y,
+            direction=probe.direction,
+        )

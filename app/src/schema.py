@@ -1,8 +1,21 @@
-from typing import Literal
+from enum import StrEnum
 
 from pydantic import BaseModel
 
-Direction = Literal["NORTH", "EAST", "SOUTH", "WEST"]
+
+class Direction(StrEnum):
+    NORTH = "NORTH"
+    EAST = "EAST"
+    SOUTH = "SOUTH"
+    WEST = "WEST"
+
+    def right(self) -> "Direction":
+        order = list(Direction)
+        return order[(order.index(self) + 1) % len(order)]
+
+    def left(self) -> "Direction":
+        order = list(Direction)
+        return order[(order.index(self) - 1) % len(order)]
 
 
 class Probe(BaseModel):
@@ -22,19 +35,23 @@ class CreateProbe(BaseModel):
     grid_max_y: int
     direction: Direction
 
-class CreateProbResponse(BaseModel):
-    id: str
-    probe_pos_x: int
-    probe_pos_y: int
-    probe_direction: Direction
-
 
 class UpdateProbe(BaseModel):
     position_x: int
     position_y: int
     direction: Direction
 
-class MoveProbeResponse(BaseModel):
+
+class MoveProbeRequest(BaseModel):
+    commands: str
+
+
+class ProbeResponse(BaseModel):
+    id: str
     x: int
     y: int
     direction: Direction
+
+
+class ProbeListResponse(BaseModel):
+    probes: list[ProbeResponse]

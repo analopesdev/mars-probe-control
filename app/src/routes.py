@@ -1,38 +1,53 @@
-import sqlite3
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 from src.database import init_db
-from src.schema import Direction
+from src.exceptions import (
+    InvalidCommandError,
+    InvalidGridError,
+    OutOfGridError,
+    ProbeNotFoundError,
+)
+from src.repository import ProbeRepository
+from src.schema import Direction, MoveProbeRequest, ProbeListResponse, ProbeResponse
 from src.service import ProbeService
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
     yield
 
+
 app = FastAPI(title="Probe API", description="API for the probe", lifespan=lifespan)
-probe_service = ProbeService()
+probe_service = ProbeService(ProbeRepository())
 
-@app.post("/probes")
+
+def _error_handler(status_code: int):
+    async def handler(request: Request, exc: Exception) -> JSONResponse:
+        return JSONResponse(status_code=status_code, content={"detail": str(exc)})
+
+    return handler
+
+
+app.add_exception_handler(ProbeNotFoundError, _error_handler(404))
+app.add_exception_handler(InvalidCommandError, _error_handler(422))
+app.add_exception_handler(OutOfGridError, _error_handler(422))
+app.add_exception_handler(InvalidGridError, _error_handler(422))
+
+
+@app.post("/probes", response_model=ProbeResponse)
 def launch_probe(grid_max_x: int, grid_max_y: int, direction: Direction):
-    try:
-        result = probe_service.launch_probe(grid_max_x, grid_max_y, direction)
-    except sqlite3.IntegrityError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    return {"message": "Probe launched successfully", "data": result}
+    return probe_service.launch_probe(grid_max_x, grid_max_y, direction)
 
-@app.put("/probes/{id}/move")
-def move_probe(id: str, commands: list[str]):
-    try:
-        result = probe_service.move_probe(id, commands)
-    except sqlite3.IntegrityError as e:
-        raise HTTPException(status_code=400, detail=f"Posição inválida: {e}")
-    if result is None:
-        raise HTTPException(status_code=404, detail="Probe not found")
-    return {"message": "Probe moved successfully", "data": result.model_dump()}
 
-@app.get("/probes")
+@app.put("/probes/{id}/move", response_model=ProbeResponse)
+def move_probe(id: str, body: MoveProbeRequest):
+    return probe_service.move_probe(id, body.commands)
+
+
+@app.get("/probes", response_model=ProbeListResponse)
 def list_probes():
-    return probe_service.list_probes().model_dump()
+    return ProbeListResponse(probes=probe_service.list_probes())
